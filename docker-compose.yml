@@ -1,0 +1,16 @@
+services:
+  menu:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000" # Yalnızca ters vekil (Nginx/Caddy) erişsin
+    environment:
+      SITE_URL: "https://lezzetduragi.com"
+      TRUST_PROXY: "true"
+      # İlk kurulumda yönetici hesabı için (npm run seed):
+      ADMIN_EMAIL: "yonetici@lezzetduragi.com"
+    volumes:
+      - menu-veri:/data
+
+volumes:
+  menu-veri:

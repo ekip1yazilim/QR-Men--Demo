@@ -1,0 +1,33 @@
+# systemd hizmet dosyası (Ubuntu/Debian VPS)
+# Kurulum:
+#   sudo cp deploy/dijital-menu.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now dijital-menu
+# Günlükler: journalctl -u dijital-menu -f
+
+[Unit]
+Description=EKİP1 Dijital Menü
+After=network.target
+
+[Service]
+Type=simple
+User=menu
+WorkingDirectory=/opt/dijital-menu
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=HOST=127.0.0.1
+Environment=DATA_DIR=/var/lib/dijital-menu
+Environment=TRUST_PROXY=true
+Environment=SITE_URL=https://lezzetduragi.com
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning dist/server.mjs
+Restart=always
+RestartSec=3
+
+# Sağlamlaştırma
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/dijital-menu
+
+[Install]
+WantedBy=multi-user.target

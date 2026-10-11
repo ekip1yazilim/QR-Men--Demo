@@ -1,0 +1,37 @@
+{
+  "name": "ekip1-dijital-menu",
+  "version": "1.1.0",
+  "private": true,
+  "description": "EKİP1yazılım – Tek restorana özel dijital menü ve yönetim paneli",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "tsx scripts/dev.ts",
+    "build": "tsx scripts/build.ts",
+    "start": "node --disable-warning=ExperimentalWarning dist/server.mjs",
+    "seed": "node --disable-warning=ExperimentalWarning dist/seed.mjs",
+    "admin": "node --disable-warning=ExperimentalWarning dist/admin.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --disable-warning=ExperimentalWarning --import tsx --test tests/unit/*.test.ts tests/integration/*.test.ts",
+    "test:e2e": "tsx tests/e2e/run.ts"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-icons": "^5.7.0",
+    "sharp": "^0.35.4",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "esbuild": "^0.28.2",
+    "playwright": "^1.56.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.12",
+    "typescript": "^6.0.3"
+  }
+}
