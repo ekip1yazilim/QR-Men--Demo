@@ -15,7 +15,8 @@
     "admin": "node --disable-warning=ExperimentalWarning dist/admin.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node --disable-warning=ExperimentalWarning --import tsx --test tests/unit/*.test.ts tests/integration/*.test.ts",
-    "test:e2e": "tsx tests/e2e/run.ts"
+    "test:e2e": "tsx tests/e2e/run.ts",
+    "onizleme": "tsx scripts/snapshot.ts"
   },
   "dependencies": {
     "react": "^19.2.8",

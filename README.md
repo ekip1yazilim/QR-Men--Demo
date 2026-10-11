@@ -110,6 +110,20 @@ npm run admin -- sil eposta@ornek.com      # son yönetici silinemez
 
 Ortam değişkenlerinin tamamı `.env.example` dosyasında açıklanmıştır.
 
+### Tek dosyalık HTML önizleme
+
+Menüyü sunucu olmadan incelemek veya müşteriye göndermek için, sunucu açıkken:
+
+```bash
+npm run onizleme                      # dist/menu-onizleme.html
+npm run onizleme -- --koyu            # koyu tema: dist/menu-onizleme-koyu.html
+npm run onizleme -- --adres http://localhost:3000 --cikti ./menu.html
+```
+
+Dosya; menü verilerini, fotoğrafları, ikonları, yazı tiplerini ve menü kodunun aynısını içerir. İnternetsiz açılır;
+kategori sekmeleri, arama, filtre ve ürün detayı çalışır. Yalnızca o anki menünün kopyasıdır — panelde yapılan
+değişiklikler için dosyayı yeniden üretin.
+
 ## Testler
 
 ```bash
