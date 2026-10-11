@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LuCheck, LuCopy, LuDownload, LuExternalLink, LuPrinter, LuShieldCheck, LuTriangleAlert } from "react-icons/lu";
+import { LuCheck, LuCopy, LuDownload, LuExternalLink, LuPrinter, LuReceiptText, LuShieldCheck, LuTriangleAlert } from "react-icons/lu";
 import { useBoot } from "../App";
 import { useResource } from "../lib/hooks";
 import { Link } from "../lib/router";
@@ -125,11 +125,15 @@ export function QrPage() {
                 <Button icon={LuPrinter} onClick={() => window.print()}>
                   Masa kartı yazdır
                 </Button>
+                <ButtonLink to="/yonetim/fiyat-listesi" icon={LuReceiptText}>
+                  Basılı fiyat listesi
+                </ButtonLink>
               </div>
               <ul className="mt-5 space-y-1.5 text-sm text-ink-3">
                 <li>Basılı QR kod en az 3 × 3 cm olmalı; masada 4–5 cm idealdir.</li>
                 <li>QR kodun etrafındaki beyaz boşluğu kırpmayın; okutmayı kolaylaştırır.</li>
                 <li>Parlak (laminasyonlu) yüzeylerde ışık yansımasını önlemek için mat baskı tercih edin.</li>
+                <li>Masada QR menü kullanılıyorsa müşteri isterse basılı fiyat listesi verilmeli, girişte de fiyat listesi bulunmalıdır.</li>
               </ul>
             </Panel>
           </div>

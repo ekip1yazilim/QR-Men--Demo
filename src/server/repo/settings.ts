@@ -48,6 +48,7 @@ export const DEFAULT_GENERAL: GeneralSettings = {
   seoDescription: "",
   menuPublished: true,
   unpublishedMessage: "Menümüzü sizin için güncelliyoruz. Lütfen birazdan tekrar deneyin.",
+  privacyNotice: "",
 };
 
 function read<T extends object>(key: string, defaults: T): T {

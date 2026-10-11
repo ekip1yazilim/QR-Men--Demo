@@ -7,6 +7,7 @@ import { Categories } from "./pages/Categories";
 import { DesignPage } from "./pages/Design";
 import { MenuBoard } from "./pages/MenuBoard";
 import { Overview } from "./pages/Overview";
+import { PriceListPage } from "./pages/PriceList";
 import { ProductForm } from "./pages/ProductForm";
 import { Products } from "./pages/Products";
 import { QrPage } from "./pages/Qr";
@@ -36,6 +37,7 @@ function Routes() {
   const edit = matchPath("/yonetim/urunler/:id", path);
   if (edit && /^\d+$/.test(edit.id)) return <ProductForm key={edit.id} id={Number(edit.id)} />;
   if (path === "/yonetim/qr-kod") return <QrPage />;
+  if (path === "/yonetim/fiyat-listesi") return <PriceListPage />;
   if (path === "/yonetim/restoran") return <RestaurantPage />;
   if (path === "/yonetim/tasarim") return <DesignPage />;
   if (path === "/yonetim/ayarlar") return <SettingsPage />;

@@ -1,6 +1,7 @@
 /** Herkese açık menü verisinin hazırlanması (yalnızca aktif kategori ve ürünler). */
 import { db } from "../db";
 import { mapProducts, type ProductRow } from "../repo/products";
+import { defaultPrivacyNotice } from "../../shared/privacy";
 import { getDesign, getGeneral, getRestaurant, MENU_PATH, resolveBaseUrl } from "../repo/settings";
 import type { DesignSettings, PublicCategory, PublicMenu, PublicProduct, Product } from "../../shared/types";
 
@@ -50,8 +51,9 @@ export function buildPublicMenu(requestOrigin: string, opts: { preview?: boolean
   const design = { ...getDesign(), ...(opts.design ?? {}) };
   const { base } = resolveBaseUrl(requestOrigin);
 
+  const restaurant = getRestaurant();
   return {
-    restaurant: getRestaurant(),
+    restaurant,
     design,
     categories,
     featured,
@@ -59,5 +61,6 @@ export function buildPublicMenu(requestOrigin: string, opts: { preview?: boolean
     menuUrl: base + MENU_PATH,
     generatedAt: new Date().toISOString(),
     preview: !!opts.preview,
+    privacyNotice: general.privacyNotice || defaultPrivacyNotice(restaurant),
   };
 }

@@ -454,6 +454,9 @@
   .print-only { display: none; }
   .masa-karti { page: masa-karti; }
   @page masa-karti { size: A6 portrait; margin: 0; }
+  /* Yazdırma: basılı fiyat listesi */
+  .fiyat-listesi { page: fiyat-listesi; }
+  @page fiyat-listesi { size: A4 portrait; margin: 12mm 12mm 14mm; }
   @media print {
     .print-hidden { display: none !important; }
     .print-only { display: block !important; }

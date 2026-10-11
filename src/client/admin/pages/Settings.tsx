@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { LuDatabase, LuDownload, LuKeyRound, LuLogOut, LuTriangleAlert } from "react-icons/lu";
+import { LuDatabase, LuDownload, LuKeyRound, LuLogOut, LuShieldCheck, LuTriangleAlert } from "react-icons/lu";
 import { formatDateTime } from "../../../shared/format";
 import { accountInputSchema, fieldErrors, generalInputSchema, passwordChangeSchema, PASSWORD_MIN } from "../../../shared/schemas";
 import type { GeneralSettings } from "../../../shared/types";
@@ -12,6 +12,8 @@ import { Button, ErrorState, Field, PageHeader, Panel, SaveBar, SkeletonRows, Sw
 
 interface SettingsData {
   general: GeneralSettings;
+  /** Restoran bilgilerinden üretilen varsayılan gizlilik metni */
+  defaultPrivacyNotice: string;
   envSiteUrl: string;
   account: { name: string; email: string; passwordChangedAt: string; lastLoginAt: string | null };
   sessions: number;
@@ -294,6 +296,39 @@ export function SettingsPage() {
                 </p>
               </div>
             </div>
+          </Panel>
+
+          <Panel
+            title="Gizlilik ve çerez bilgisi"
+            description="Menünün alt bilgisindeki “Gizlilik ve çerezler” bağlantısında gösterilir (KVKK aydınlatma metni)."
+          >
+            <div className="flex gap-3 rounded-xl bg-raised px-4 py-3 text-sm leading-relaxed text-ink-2">
+              <LuShieldCheck className="mt-0.5 size-4 shrink-0 text-ok" aria-hidden="true" />
+              <p>
+                Müşteri menüsü çerez kullanmaz, reklam veya izleme aracı ve üçüncü taraf hizmet yüklemez; bu yüzden çerez onay
+                penceresi gerekmez. Yönetim panelindeki oturum çerezi yalnızca giriş için zorunlu çerezdir.
+              </p>
+            </div>
+            <Field
+              label="Metin"
+              optional
+              className="mt-5"
+              error={errors.privacyNotice}
+              counter={{ value: form.privacyNotice.length, max: 6000 }}
+              hint="Boş bırakılırsa restoran bilgilerinizden oluşturulan varsayılan metin gösterilir. Kendi hukuk metniniz varsa buraya yapıştırın; kısa, noktasız satırlar ara başlık olarak görünür."
+            >
+              <textarea
+                className="field min-h-48 text-[0.88rem] leading-relaxed"
+                value={form.privacyNotice}
+                placeholder={data.defaultPrivacyNotice}
+                onChange={(e) => set("privacyNotice", e.target.value)}
+              />
+            </Field>
+            {!form.privacyNotice && (
+              <Button className="mt-3" onClick={() => set("privacyNotice", data.defaultPrivacyNotice)}>
+                Varsayılan metni düzenlemek için kopyala
+              </Button>
+            )}
           </Panel>
 
           <SaveBar dirty={dirty} saving={saving} onSave={() => void save()} onReset={() => setForm(data.general)} saveLabel="Ayarları kaydet" />

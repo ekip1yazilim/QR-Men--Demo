@@ -12,6 +12,7 @@ interface Props {
   year: number;
   hasCredits: boolean;
   onShowCredits: () => void;
+  onShowPrivacy: () => void;
 }
 
 function ContactLine({ icon: Icon, children, href, external }: { icon: IconType; children: React.ReactNode; href?: string; external?: boolean }) {
@@ -40,7 +41,7 @@ function ContactLine({ icon: Icon, children, href, external }: { icon: IconType;
   );
 }
 
-export function InfoSection({ restaurant: r, status, timeZone, year, hasCredits, onShowCredits }: Props) {
+export function InfoSection({ restaurant: r, status, timeZone, year, hasCredits, onShowCredits, onShowPrivacy }: Props) {
   const today = zonedNow(status.now, timeZone).day;
   const mapsHref = r.mapsUrl || (r.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.address)}` : "");
   const hasContact = r.address || r.phone || r.whatsapp || r.email || r.instagram;
@@ -142,6 +143,10 @@ export function InfoSection({ restaurant: r, status, timeZone, year, hasCredits,
             {r.footerNote && <p>{r.footerNote}</p>}
             <p className="mt-1 text-white/50">
               © {year} {r.name}
+              {" · "}
+              <button type="button" onClick={onShowPrivacy} className="underline underline-offset-2 hover:text-white">
+                Gizlilik ve çerezler
+              </button>
               {hasCredits && (
                 <>
                   {" · "}

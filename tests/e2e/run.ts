@@ -181,6 +181,16 @@ async function main() {
       await desk.getByRole("button", { name: "Temizle" }).first().click();
     });
 
+    await step("çerez yok; alt bilgide gizlilik ve çerez bilgisi açılır", async () => {
+      assert.deepEqual(await desk.context().cookies(), [], "müşteri menüsü çerez yazmamalı");
+      await desk.getByRole("button", { name: "Gizlilik ve çerezler" }).click();
+      const sheet = desk.locator("dialog[open]");
+      await sheet.getByRole("heading", { name: "Çerezler", exact: true }).waitFor();
+      assert.match(await sheet.innerText(), /Dijital menümüz çerez kullanmaz/);
+      await desk.keyboard.press("Escape");
+      await desk.waitForFunction(() => !document.querySelector("dialog[open]"));
+    });
+
     await step("paylaşılan ürün bağlantısı sunucuda açık gelir", async () => {
       await desk.goto(`${base}/menu?urun=dana-antrikot`, { waitUntil: "networkidle" });
       assert.match(await desk.locator("dialog[open]").innerText(), /Dana Antrikot/);
@@ -275,6 +285,21 @@ async function main() {
       assert.equal(download.suggestedFilename(), "menu-qr-kod.png");
       const file = await download.path();
       assert.equal(await decodeQrPng(fs.readFileSync(file)), `${base}/menu`);
+    });
+
+    await step("basılı fiyat listesi tüm ürünleri fiyatlarıyla A4 olarak hazırlar", async () => {
+      await adminPage.goto(`${base}/yonetim/fiyat-listesi`);
+      const sheet = adminPage.getByLabel("Basılı fiyat listesi önizlemesi");
+      await sheet.waitFor();
+      const text = await sheet.innerText();
+      assert.match(text, /FİYAT LİSTESİ/);
+      assert.match(text, /E2E Künefe[\s\S]*₺145,50/);
+      assert.match(text, /Alerjen: Süt ürünleri, Antep fıstığı/);
+      assert.match(text, /KDV dahildir/);
+      assert.equal(await sheet.locator("li").count(), 34);
+      await shot(adminPage, "yonetim-fiyat-listesi");
+      const pdf = await adminPage.pdf({ preferCSSPageSize: true, printBackground: true });
+      assert.ok(pdf.subarray(0, 5).toString() === "%PDF-" && pdf.length > 20_000);
     });
 
     await step("koyu tema kaydedilir ve menüye uygulanır", async () => {

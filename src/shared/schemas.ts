@@ -171,6 +171,11 @@ export const generalInputSchema = z.object({
   seoDescription: trimmed(170, "Arama motoru açıklaması").default(""),
   menuPublished: z.boolean(),
   unpublishedMessage: trimmed(200, "Bilgilendirme mesajı").default(""),
+  privacyNotice: z
+    .string()
+    .max(6000, "Gizlilik metni en fazla 6000 karakter olabilir.")
+    .transform((v) => v.replace(/\r\n/g, "\n").trim())
+    .default(""),
 });
 export type GeneralInput = z.infer<typeof generalInputSchema>;
 

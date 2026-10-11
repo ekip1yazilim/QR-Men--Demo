@@ -4,6 +4,8 @@ import path from "node:path";
 import { Readable } from "node:stream";
 import type { ZodType, ZodTypeDef } from "zod";
 import { config } from "../config";
+import { defaultPrivacyNotice } from "../../shared/privacy";
+import { buildPublicMenu } from "../services/menu";
 import { db } from "../db";
 import { LATEST_SCHEMA_VERSION } from "../db/migrations";
 import { apiError, bytes, HttpError, intParam, json, readJson, type Ctx } from "../http/core";
@@ -351,6 +353,7 @@ export function settingsGet(ctx: Ctx): Response {
   const user = findUserById(uid(ctx))!;
   return json({
     general: getGeneral(),
+    defaultPrivacyNotice: defaultPrivacyNotice(getRestaurant()),
     envSiteUrl: config.siteUrl,
     account: { name: user.name, email: user.email, passwordChangedAt: user.password_changed_at, lastLoginAt: user.last_login_at },
     sessions: countSessions(user.id),
@@ -402,6 +405,11 @@ export function sessionsRevoke(ctx: Ctx): Response {
 // ---------------------------------------------------------------------------
 // QR kod
 // ---------------------------------------------------------------------------
+/** Basılı fiyat listesi için menüdeki aktif ürünler (müşteri menüsüyle aynı veri) */
+export function priceListRoute(ctx: Ctx): Response {
+  return json({ menu: buildPublicMenu(ctx.origin) });
+}
+
 export function qrInfo(ctx: Ctx): Response {
   const { menuUrl, configured } = menuUrlFor(ctx);
   return json({ menuUrl, configured, restaurantName: getRestaurant().name });

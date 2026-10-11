@@ -53,6 +53,7 @@ Tasarım, verilen referans görsele göre birebir uygulanmıştır:
 - Masaüstünde sağ altta WhatsApp düğmesi (yalnızca iletişim için)
 - Etiket filtreleri (vegan, glutensiz, acılı…), "tükenenleri gizle", tükendi rozetleri
 - İletişim ve çalışma saatleri bölümü, bugünün vurgulandığı haftalık saat tablosu
+- Alt bilgide **Gizlilik ve çerezler** bağlantısı (KVKK aydınlatma metni)
 - Erişilebilirlik: klavye ile gezinme, ekran okuyucu etiketleri, `prefers-reduced-motion` desteği
 
 **Tema:** Referans görsel beyaz içerik alanlı olduğu için varsayılan tema **Açık (beyaz)**'tır.
@@ -67,9 +68,10 @@ Antrasit zeminli, sıcak ışıltılı ve koyu arama kutulu **Koyu** tema, Yöne
 - **Kategoriler** — ekleme, düzenleme, ikon seçimi, gizleme, silme (ürünleri başka kategoriye taşıyarak veya silerek)
 - **Ürünler** — arama ve filtreler, fotoğraf yükleme (sürükle-bırak), etiketler, alerjen, kalori, menüdeki kartın canlı önizlemesi
 - **QR Kod Yönetimi** — menü bağlantısı, PNG/SVG indirme, yazdırılabilir masa kartı
+- **Basılı Fiyat Listesi** — menüdeki tüm ürünler güncel fiyat, açıklama ve alerjen bilgisiyle A4 olarak yazdırılır veya PDF kaydedilir
 - **Restoran Bilgileri** — ad, logo alt yazısı, kapak başlığı ve açıklaması, logo, kapak fotoğrafı, iletişim, çalışma saatleri
 - **Tasarım Ayarları** — vurgu rengi (okunabilirlik otomatik denetlenir), tema, yazı tipi, bölümleri aç/kapat; kaydetmeden canlı önizleme
-- **Genel Ayarlar** — site adresi (QR kod bu adrese göre üretilir), saat dilimi, SEO, menüyü yayından kaldırma, hesap ve şifre, tüm oturumları kapatma, veritabanı yedeği indirme
+- **Genel Ayarlar** — site adresi (QR kod bu adrese göre üretilir), saat dilimi, SEO, menüyü yayından kaldırma, gizlilik ve çerez metni, hesap ve şifre, tüm oturumları kapatma, veritabanı yedeği indirme
 
 ## Kurulum
 
@@ -128,8 +130,8 @@ değişiklikler için dosyayı yeniden üretin.
 
 ```bash
 npm run typecheck
-npm test                      # birim + entegrasyon testleri (49 test)
-npm run build && npm run test:e2e            # gerçek tarayıcıda uçtan uca testler (16 senaryo)
+npm test                      # birim + entegrasyon testleri (54 test)
+npm run build && npm run test:e2e            # gerçek tarayıcıda uçtan uca testler (18 senaryo)
 npm run test:e2e -- --ekran                  # docs/ekran-goruntuleri altındaki görüntüleri yeniler
 ```
 
@@ -138,6 +140,29 @@ XSS kaçışı, görsel işleme ve EXIF silme, QR kodun çözülerek doğrulanma
 paylaşılan ürün/kategori bağlantıları, yönetici önizlemesi, menüyü yayından kaldırma; tarayıcıda kategori
 sekmeleri, arama, filtre, ürün detayı, telefon gezinmesi ve yatay taşma kontrolü, menüde sepet/sipariş öğesi
 bulunmadığı, panelden fotoğraflı ürün ekleme, QR PNG indirme ve tema değiştirme.
+
+## Yasal uyumluluk notları
+
+> Bu bölüm bilgilendirme amaçlıdır, hukuki görüş değildir. Kendi durumunuz için bir avukata danışın.
+
+**Çerezler ve KVKK.** Müşteri menüsü hiç çerez yazmaz; reklam, izleme veya analiz aracı, harici yazı tipi
+ya da sosyal medya eklentisi yüklemez (tüm dosyalar kendi sunucunuzdan gelir). Görüntülenme sayısı kimliksiz
+tutulur. Onay alınması gereken bir çerez olmadığı için **çerez onay penceresi gerekmez** — gereksiz bir onay
+penceresi göstermek de önerilmez. Yönetim panelindeki `menu_oturum` çerezi yalnızca giriş için zorunlu çerezdir
+(HttpOnly, SameSite=Lax, yalnızca `/yonetim` yolunda). Sunucu ve ters vekil (Nginx/Caddy) teknik kayıtlarda IP
+adresi tutabileceği için menünün alt bilgisinde **Gizlilik ve çerezler** metni (KVKK aydınlatma metni) bulunur.
+Varsayılan metin restoran bilgilerinizden oluşturulur; Yönetim → Genel Ayarlar'dan kendi metninizle değiştirebilirsiniz.
+
+**Fiyat Etiketi Yönetmeliği** (11 Ekim 2025 değişikliği). Masalarda fiyat listesi karekodla (QR) sunulabilir; ancak
+müşteri isterse fiyat listesi **basılı olarak** verilmeli ve işyeri **girişinde** görülebilir bir fiyat listesi
+bulunmalıdır. Bunun için Yönetim → **Basılı Fiyat Listesi** sayfasından A4 liste yazdırın. Servis ücreti, kuver gibi
+fiyata ek her türlü ücret fiyat listesinde gösterilmelidir: Restoran Bilgileri → **Fiyat bilgisi notu** alanına yazın;
+menüde ve basılı listede görünür. Bakanlığın belirleyeceği ölçütlere giren işletmeler fiyat listelerini ayrıca
+Bakanlığın elektronik sistemine aktarmakla yükümlüdür (bu sistem bu yazılıma bağlı değildir).
+
+**Alerjenler** (Türk Gıda Kodeksi Gıda Etiketleme ve Tüketicileri Bilgilendirme Yönetmeliği). Toplu tüketim
+yerlerinde alerjen içeren ürünler menüde belirtilmelidir. Her ürünün **Alerjenler** alanını doldurun; bilgi ürün
+detayında ve basılı fiyat listesinde gösterilir.
 
 ## Proje yapısı
 

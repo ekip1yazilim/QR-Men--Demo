@@ -2,11 +2,26 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { LuCheck, LuChevronRight, LuMapPin, LuX } from "react-icons/lu";
 import { BADGES } from "../../shared/catalog";
+import { isNoticeHeading } from "../../shared/privacy";
 import type { BadgeKey, ImageCredit, PublicCategory } from "../../shared/types";
 import { AllItemsMark, CategoryIcon } from "../ui/icons";
 import { cx } from "./ProductCard";
 
-function Sheet({ open, onClose, title, children, footer }: { open: boolean; onClose: () => void; title: string; children: ReactNode; footer?: ReactNode }) {
+function Sheet({
+  open,
+  onClose,
+  title,
+  children,
+  footer,
+  size = "sm",
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
+  footer?: ReactNode;
+  size?: "sm" | "lg";
+}) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   useEffect(() => {
@@ -18,7 +33,7 @@ function Sheet({ open, onClose, title, children, footer }: { open: boolean; onCl
   return (
     <dialog
       ref={ref}
-      className="sheet sheet-sm"
+      className={cx("sheet", size === "lg" ? "sheet-lg" : "sheet-sm")}
       aria-labelledby={titleId}
       onCancel={(e) => {
         e.preventDefault();
@@ -212,6 +227,27 @@ export function CreditsSheet({ open, onClose, items }: { open: boolean; onClose:
             </li>
           ))}
         </ul>
+      </div>
+    </Sheet>
+  );
+}
+
+/** Gizlilik ve çerez bilgisi (KVKK aydınlatma metni) — Yönetim → Genel Ayarlar'dan düzenlenir */
+export function PrivacySheet({ open, onClose, text }: { open: boolean; onClose: () => void; text: string }) {
+  const blocks = text.split(/\n{2,}/).map((b) => b.split("\n"));
+  return (
+    <Sheet open={open} onClose={onClose} title="Gizlilik ve çerezler" size="lg">
+      <div className="space-y-4 px-2 pb-2 text-[0.9rem] leading-relaxed text-ink-2">
+        {blocks.map((lines, i) => {
+          const [first, ...rest] = lines;
+          const heading = rest.length > 0 && isNoticeHeading(first);
+          return (
+            <div key={i}>
+              {heading && <h3 className="mb-1 font-display text-[0.95rem] font-semibold text-ink">{first.trim()}</h3>}
+              <p className="whitespace-pre-line">{(heading ? rest : lines).join("\n")}</p>
+            </div>
+          );
+        })}
       </div>
     </Sheet>
   );

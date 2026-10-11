@@ -5,7 +5,8 @@ import { BADGE_KEYS, categoryIconUrl, CATEGORY_ICON_KEYS, productIcon } from "..
 import { ACCENT_TEXT_CONTRAST, accentTokens, contrastRatio, inkOn, isHexColor, MENU_BG, readableOn } from "../../src/shared/color";
 import { foldTurkish, formatPrice, parsePriceInput, searchKey, slugify, telHref, whatsappHref } from "../../src/shared/format";
 import { DEFAULT_HOURS, getOpenStatus, groupHours, toMinutes } from "../../src/shared/hours";
-import { designInputSchema, fieldErrors, productInputSchema, restaurantInputSchema } from "../../src/shared/schemas";
+import { defaultPrivacyNotice, isNoticeHeading } from "../../src/shared/privacy";
+import { designInputSchema, fieldErrors, generalInputSchema, productInputSchema, restaurantInputSchema } from "../../src/shared/schemas";
 import type { WeekHours } from "../../src/shared/types";
 
 const TZ = "Europe/Istanbul";
@@ -150,5 +151,29 @@ describe("doğrulama şemaları", () => {
     const shape = restaurantInputSchema.shape;
     assert.ok(!shape.heroTitle.safeParse("x".repeat(71)).success);
     assert.equal(shape.brandLabel.parse("  RESTAURANT  "), "RESTAURANT");
+  });
+});
+
+describe("gizlilik metni", () => {
+  it("restoran bilgileriyle varsayılan KVKK aydınlatma metni üretir", () => {
+    const text = defaultPrivacyNotice({ name: "Lezzet Durağı", address: "Kadıköy, İstanbul", email: "info@ornek.com", phone: "" });
+    assert.match(text, /^Lezzet Durağı olarak/);
+    assert.match(text, /çerez kullanmaz/);
+    assert.match(text, /Başvurularınız için: info@ornek.com · Kadıköy, İstanbul/);
+    assert.match(text, /Veri sorumlusu: Lezzet Durağı, Kadıköy, İstanbul$/);
+    assert.ok(!/undefined|null/.test(defaultPrivacyNotice({ name: "", address: "", email: "", phone: "" })));
+  });
+
+  it("kısa satırları ara başlık sayar, cümleleri saymaz", () => {
+    assert.ok(isNoticeHeading("Çerezler"));
+    assert.ok(isNoticeHeading("Haklarınız"));
+    assert.ok(!isNoticeHeading("Dijital menümüz çerez kullanmaz."));
+    assert.ok(!isNoticeHeading("Veri sorumlusu: Lezzet"));
+  });
+
+  it("özel metni Windows satır sonlarından arındırır ve sınırlar", () => {
+    const base = { siteUrl: "", timezone: "Europe/Istanbul", menuPublished: true };
+    assert.equal(generalInputSchema.parse({ ...base, privacyNotice: " Başlık\r\nMetin. " }).privacyNotice, "Başlık\nMetin.");
+    assert.ok(!generalInputSchema.safeParse({ ...base, privacyNotice: "x".repeat(6001) }).success);
   });
 });

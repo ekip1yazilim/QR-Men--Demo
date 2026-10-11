@@ -216,8 +216,14 @@ export function RestaurantPage() {
             <Field label="Saatlerle ilgili not" optional error={errors.hoursNote} counter={{ value: form.hoursNote.length, max: 140 }}>
               <input className="field" value={form.hoursNote} onChange={(e) => set("hoursNote", e.target.value)} placeholder="Örn. Mutfak kapanıştan 45 dakika önce kapanır." />
             </Field>
-            <Field label="Menü alt bilgi notu" optional error={errors.footerNote} counter={{ value: form.footerNote.length, max: 160 }}>
-              <input className="field" value={form.footerNote} onChange={(e) => set("footerNote", e.target.value)} placeholder="Örn. Tüm fiyatlarımıza KDV dahildir." />
+            <Field
+              label="Fiyat bilgisi notu"
+              optional
+              error={errors.footerNote}
+              counter={{ value: form.footerNote.length, max: 160 }}
+              hint="Menüde ve basılı fiyat listesinde gösterilir. Servis ücreti, kuver gibi fiyatlara ek bir ücret alıyorsanız burada belirtmeniz zorunludur (Fiyat Etiketi Yönetmeliği)."
+            >
+              <input className="field" value={form.footerNote} onChange={(e) => set("footerNote", e.target.value)} placeholder="Örn. Tüm fiyatlarımıza KDV dahildir. Servis ücreti alınmaz." />
             </Field>
           </div>
         </Panel>

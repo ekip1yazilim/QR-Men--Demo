@@ -69,6 +69,7 @@ export function buildRouter(): Router {
   r.put(`${A}/hesap/sifre`, requireApi(admin.passwordChange));
   r.post(`${A}/oturumlar/kapat`, requireApi(admin.sessionsRevoke));
 
+  r.get(`${A}/fiyat-listesi`, requireApi(admin.priceListRoute));
   r.get(`${A}/qr`, requireApi(admin.qrInfo));
   r.get(`${A}/qr.png`, requireApi(admin.qrPngRoute));
   r.get(`${A}/qr.svg`, requireApi(admin.qrSvgRoute));

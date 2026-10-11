@@ -11,7 +11,7 @@ import { Hero } from "./Hero";
 import { InfoSection } from "./InfoSection";
 import { ProductCard, ProductGrid, cx } from "./ProductCard";
 import { ProductDialog } from "./ProductDialog";
-import { CategorySheet, CreditsSheet, FilterSheet, type MenuFilters } from "./Sheets";
+import { CategorySheet, CreditsSheet, FilterSheet, PrivacySheet, type MenuFilters } from "./Sheets";
 import { prefersReducedMotion, scrollToId, track, useInView, useOpenStatus, useScrolled } from "./hooks";
 
 export interface MenuAppProps {
@@ -24,7 +24,7 @@ export interface MenuAppProps {
   initialView: string;
 }
 
-type SheetKind = "categories" | "filters" | "credits" | null;
+type SheetKind = "categories" | "filters" | "credits" | "privacy" | null;
 
 /** URL'deki ?kategori= değerini geçerli bir görünüme çevirir (sunucu ve istemci aynı sonucu üretir) */
 export function resolveView(raw: string | null, data: PublicMenu): string {
@@ -348,6 +348,7 @@ export function MenuApp({ data, initialSlug, missingProduct, initialView }: Menu
         year={year}
         hasCredits={credits.length > 0}
         onShowCredits={() => setSheet("credits")}
+        onShowPrivacy={() => setSheet("privacy")}
       />
 
       <ProductDialog
@@ -369,6 +370,7 @@ export function MenuApp({ data, initialSlug, missingProduct, initialView }: Menu
       />
       <FilterSheet open={sheet === "filters"} onClose={() => setSheet(null)} filters={filters} onChange={setFilters} resultCount={visibleCount} />
       <CreditsSheet open={sheet === "credits"} onClose={() => setSheet(null)} items={credits} />
+      <PrivacySheet open={sheet === "privacy"} onClose={() => setSheet(null)} text={data.privacyNotice} />
 
       {notice && (
         <div role="status" className="toast-enter fixed inset-x-4 bottom-[calc(env(safe-area-inset-bottom)+5rem)] z-40 mx-auto max-w-md md:bottom-6">

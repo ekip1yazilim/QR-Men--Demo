@@ -71,6 +71,8 @@ export interface GeneralSettings {
   seoDescription: string;
   menuPublished: boolean;
   unpublishedMessage: string;
+  /** Menüdeki "Gizlilik ve çerezler" metni; boşsa varsayılan metin gösterilir */
+  privacyNotice: string;
 }
 
 export interface Category {
@@ -139,6 +141,8 @@ export interface PublicMenu {
   generatedAt: string;
   /** Yönetim panelindeki canlı önizleme */
   preview: boolean;
+  /** Gizlilik ve çerez bilgisi (özel metin ya da varsayılan) */
+  privacyNotice: string;
 }
 
 export interface ActivityItem {

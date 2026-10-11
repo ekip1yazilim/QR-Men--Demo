@@ -32,7 +32,7 @@ export const SAMPLE_RESTAURANT: StoredRestaurant = {
     { closed: false, open: "10:00", close: "22:00" },
   ] satisfies WeekHours,
   hoursNote: "Mutfağımız kapanıştan 45 dakika önce sipariş almayı bırakır.",
-  footerNote: "Tüm fiyatlarımıza KDV dahildir. Alerjen bilgisi için garsonumuza danışabilirsiniz.",
+  footerNote: "Tüm fiyatlarımıza KDV dahildir. Servis ücreti alınmaz.",
   logoImageId: null,
   coverImageId: null,
 };
@@ -136,6 +136,7 @@ export const SAMPLE_MENU: { name: string; icon: string; description: string; pro
         price: 420,
         photo: "firinda-dana-incik",
         soldOut: true,
+        allergens: "Kereviz, gluten (un)",
         calories: 780,
       },
     ],

@@ -273,6 +273,30 @@ describe("müşteri menüsü (SSR)", () => {
     assert.equal(embedded(preview.text, "menu-veri").data.preview, true);
   });
 
+  it("çerez kullanmaz; gizlilik metni varsayılan ya da yöneticinin metnidir", async () => {
+    const res = await new Client().get("/menu?urun=izgara-kofte-b");
+    assert.deepEqual(res.headers.getSetCookie(), [], "müşteri menüsü çerez yazmamalı");
+    const notice = embedded(res.text, "menu-veri").data.privacyNotice as string;
+    assert.match(notice, /Dijital menümüz çerez kullanmaz/);
+    assert.match(res.text, /Gizlilik ve çerezler/);
+
+    const general = (await admin.get("/yonetim/api/ayarlar")).json().general;
+    const saved = await admin.send("PUT", "/yonetim/api/ayarlar", { json: { ...general, privacyNotice: "Özel Metin\r\nAvukatımızın hazırladığı metin." } });
+    assert.equal(saved.status, 200, saved.text);
+    assert.match(saved.json().defaultPrivacyNotice, /KVKK/);
+    assert.equal(embedded((await new Client().get("/menu")).text, "menu-veri").data.privacyNotice, "Özel Metin\nAvukatımızın hazırladığı metin.");
+    await admin.send("PUT", "/yonetim/api/ayarlar", { json: { ...general, privacyNotice: "" } });
+  });
+
+  it("basılı fiyat listesi verisi yalnızca yöneticiye açıktır", async () => {
+    assert.equal((await new Client().get("/yonetim/api/fiyat-listesi")).status, 401);
+    const res = await admin.get("/yonetim/api/fiyat-listesi");
+    assert.equal(res.status, 200);
+    const menu = res.json().menu;
+    assert.ok(menu.categories.length > 0);
+    assert.ok(menu.categories.flatMap((c: { products: { name: string }[] }) => c.products).some((p: { name: string }) => p.name === "Kuzu Şiş"));
+  });
+
   it("menü yayından kaldırılınca bilgilendirme sayfası gösterir", async () => {
     const general = (await admin.get("/yonetim/api/ayarlar")).json().general;
     const off = await admin.send("PUT", "/yonetim/api/ayarlar", { json: { ...general, menuPublished: false, unpublishedMessage: "Bakımdayız, birazdan döneceğiz." } });
